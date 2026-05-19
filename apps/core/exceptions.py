@@ -9,28 +9,47 @@ def custom_exception_handler(exc, context):
 
     if response is not None:
 
+        status_code = response.status_code
+        errors = response.data
+
         message = 'Something went wrong'
 
-        if response.status_code == 400:
+        # Validation Error
+        if status_code == 400:
             message = 'Validation error'
 
-        elif response.status_code == 401:
-            message = 'Unauthorized'
+        # Unauthorized
+        elif status_code == 401:
 
-        elif response.status_code == 403:
+            detail = str(errors.get('detail', ''))
+
+            if 'Token is expired' in str(errors):
+                message = 'Token expired'
+
+            elif 'token_not_valid' in str(errors):
+                message = 'Invalid token'
+
+            else:
+                message = 'Unauthorized'
+
+            errors = None
+
+        # Forbidden
+        elif status_code == 403:
             message = 'Forbidden'
 
-        elif response.status_code == 404:
+        # Not Found
+        elif status_code == 404:
             message = 'Not found'
 
         return error_response(
             message=message,
-            errors=response.data,
-            status_code=response.status_code
+            errors=errors,
+            status_code=status_code
         )
 
     return error_response(
         message='Internal server error',
-        errors=str(exc),
+        errors=None,
         status_code=500
     )
