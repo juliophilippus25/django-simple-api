@@ -1,15 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.authentication.serializers.auth_serializer import RegisterSerializer, LoginSerializer
 from apps.authentication.services.auth_service import register_user, login_user
+from apps.core.responses import success_response
 
-from apps.core.responses import (
-    success_response,
-    error_response
-)
 
 # Register
 class RegisterView(APIView):

@@ -46,7 +46,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'apps.authentication',
-    # 'apps.posts',
+    'apps.posts',
 ]
 
 
