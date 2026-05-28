@@ -9,7 +9,8 @@ from apps.posts.serializers.post_serializer import (
 
 from apps.posts.selectors.post_selector import (
     get_all_posts,
-    get_post_by_id
+    get_post_by_id,
+    get_post_by_user
 )
 
 from apps.posts.services.post_service import (
@@ -125,4 +126,24 @@ class PostDetailView(APIView):
 
         return success_response(
             message='Post deleted successfully'
+        )
+    
+class MyPostView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        posts = get_post_by_user(
+            request.user.id
+        )
+
+        serializer = PostSerializer(
+            posts,
+            many=True
+        )
+
+        return success_response(
+            message='My posts fetched successfully',
+            data=serializer.data
         )
